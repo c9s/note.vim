@@ -1,8 +1,25 @@
 
+fun! s:defopt(name,val)
+  if !exists(a:name)
+    let {a:name} = a:val
+  endif
+endf
+
+fun! s:echo(msg)
+  redraw
+  echomsg a:msg
+endf
+
+
 " Simple Vim Note
-let s:noteDir = expand('~/notes')
+let g:simpleNoteDir = expand('~/notes')
+
 fun! s:loadNoteSeq()
-  let list = split(system( 'ls -1 ' . s:noteDir ))
+  if ! isdirectory( g:simpleNoteDir )
+    cal mkdir( g:simpleNoteDir )
+  endif
+
+  let list = split(system( 'ls -1 ' . g:simpleNoteDir ))
   cal filter(  list , ' v:val =~ ''^\d\+.*\.note$'' ' )
   cal sort( list )
   if len(list) == 0
@@ -19,9 +36,12 @@ fun! s:addNote(...)
   endif
   let seq = s:loadNoteSeq()
   if strlen( title ) > 0
-    exec 'tabe ' . s:noteDir . '/' . printf('%02d',seq) . '-' . title . '.note'
+    exec 'tabe ' . g:simpleNoteDir . '/' . printf('%02d',seq) . '-' . title . '.note'
   else
-    exec 'tabe ' . s:noteDir . '/' . printf('%02d',seq) . '.note'
+    exec 'tabe ' . g:simpleNoteDir . '/' . printf('%02d',seq) . '.note'
   endif
 endf
 com! -nargs=? AddNote :cal s:addNote(<q-args>)
+
+cal s:defopt('g:simpleNoteDir' , expand('~/note') )
+
