@@ -41,6 +41,7 @@ fun! s:addNote(...)
     exec 'tabe ' . g:simpleNoteDir . '/' . printf('%02d',seq) . '.note'
   endif
 endf
+
 com! -nargs=? AddNote :cal s:addNote(<q-args>)
 
 cal s:defopt('g:simpleNoteDir' , expand('~/note') )
